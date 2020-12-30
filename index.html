@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Memory game</title>
+</head>
+<body>
+    <section id="memory-game">
+        <div class="box box--pattern">
+            <h2>Pattern fields</h2>
+            <div class="box__field">1</div>
+            <div class="box__field">2</div>
+            <div class="box__field">3</div>
+            <div class="box__field">4</div>
+            <div class="box__field">5</div>
+            <div class="box__field">6</div>
+            <div class="box__field">7</div>
+            <div class="box__field">8</div>
+            <div class="box__field">9</div>
+            <div class="box__field">10</div>
+            <div class="box__field">11</div>
+            <div class="box__field">12</div>
+            <div class="box__field">13</div>
+            <div class="box__field">14</div>
+            <div class="box__field">15</div>
+            <div class="box__field">16</div>
+        </div>
+        <div class="box box--player">
+            <h2>Player fields</h2>
+            <div class="box__field">1</div>
+            <div class="box__field">2</div>
+            <div class="box__field">3</div>
+            <div class="box__field">4</div>
+            <div class="box__field">5</div>
+            <div class="box__field">6</div>
+            <div class="box__field">7</div>
+            <div class="box__field">8</div>
+            <div class="box__field">9</div>
+            <div class="box__field">10</div>
+            <div class="box__field">11</div>
+            <div class="box__field">12</div>
+            <div class="box__field">13</div>
+            <div class="box__field">14</div>
+            <div class="box__field">15</div>
+            <div class="box__field">16</div>
+            
+        </div>
+        <div class="select-wrapper">
+            <button class="button button--start">Start</button>
+            <button class="button button--reset">Reset</button>
+            <select name="stepsNumber" id="stepsNumber" class="button">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option selected value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
+        </div>
+        <div class="popup">
+            <div class="popup__inner">
+                <h2>Congrats !!! You win !!! :)</h2>
+                <button class="button button--play-again">Play again</button>
+            </div>
+        </div>
+    </section>
+    <script src="app/Game.js" type="module"></script>
+</body>
+</html>
