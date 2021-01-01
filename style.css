@@ -56,6 +56,7 @@ body {
 .box__field.highlighted {
     background-color:#f3580c;
     color: #fff;
+    z-index: 2;
 }
 
 .select-wrapper {
@@ -136,3 +137,30 @@ body {
 .popup__inner h2 {
     color: #6d6d6d;
 }
+
+@media (max-width: 991.98px) { 
+    #memory-game {
+        flex-direction: column;
+    }
+    .box {
+        width: 100%;
+        padding: 0px;
+    }
+    .box__field {
+        font-size: 18px;
+        height: 60px;
+        margin: 2px;
+    }
+    .button {
+        padding: 10px 33px;
+        font-size: 19px;
+        margin-bottom: 10px;
+        width: 81%;
+        }
+    .select-wrapper {
+        margin-bottom: 120px;
+        margin-top: 50px;
+        flex-direction: column;
+        align-items: center;
+    }
+ }
