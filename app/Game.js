@@ -1,161 +1,155 @@
+import { patternFields } from "./components/Fields.js";
 class Game {
-
-
-    constructor({
-        buttonStart,
-        buttonReset,
-        buttonPlayAgain,
-        boxPatternField,
-        selectSteps,
-        boxPlayerField,
-        popup
-    }) {
+    constructor(buttonStart, buttonReset, buttonPlayAgain, boxPatternFields, selectSteps, boxPlayerFields, popup) {
+        this.patternSteps = [];
+        this.playerSteps = [];
+        this.clicks = 0;
+        this.highlighting = false;
+        this.currentStep = 1;
+        this.currentPattern = [];
         this.buttonStart = buttonStart;
         this.buttonReset = buttonReset;
         this.buttonPlayAgain = buttonPlayAgain;
-        this.boxPatternField = boxPatternField;
+        this.boxPatternFields = boxPatternFields;
         this.selectSteps = selectSteps;
-        this.boxPlayerField = boxPlayerField;
+        this.boxPlayerFields = boxPlayerFields;
         this.popup = popup;
     }
-    
-    patternSteps = [];
-    playerSteps = [];
-    clicks = 0;
-    highlighting = false;
-
-    randomNumbers = () => {
-        
-      return Math.floor(Math.random() * 15) + 1;
+    randomNumbers() {
+        return Math.floor(Math.random() * 15) + 1;
     }
-
-    highlight = () => {
-        let i = 0;
-        let index = 0;
-    
-        const dim = () => { 
-            this.boxPatternField[this.patternSteps[index]-1].classList.remove("highlighted");
-            i++;
-            index++; 
-        }
-
-            const time = setInterval(() => {
-                this.highlighting = true;
-                if (this.highlighting === true) {
-                    this.boxPlayerField.forEach(e=>{
-                        e.style.opacity = '.4';
-                        e.style.pointerEvents = 'none';
-                    });
-                } 
-                this.boxPatternField[this.patternSteps[index]-1].classList.add("highlighted");
-                setTimeout(dim, 500);
-                console.log("PatternSteps element: " + i);
-                    
-                if (i == this.patternSteps.length - 1) {
-                    this.highlighting = false;
-                    clearInterval(time);
-                    
-                    console.log('Pattern Steps: ' + this.patternSteps);
-                    if (this.highlighting === false){
-                        this.boxPlayerField.forEach(e=>{
-                            e.style.opacity = '1';
-                            e.style.pointerEvents = 'all';
-                        });
-                    }
-                } 
-
-            }, 600);
-    
-      }
-
-
-    start = () => {
-
-        this.buttonStart.addEventListener('click', ()=>{
-            for(let i = 0; i < (this.selectSteps.selectedIndex + 1) ; i++) {
-                this.patternSteps.push(this.boxPatternField[this.randomNumbers()].textContent);
-            }
-            console.log('Pattern steps: ' + this.patternSteps);
-            console.log("Selected index: " + (this.selectSteps.selectedIndex + 1));
-            this.highlight();
-            this.chooseField();
-            this.buttonStart.setAttribute('disabled', '');
+    deactivateFields(field) {
+        field.forEach((e) => {
+            e.style.opacity = ".4";
+            e.style.pointerEvents = "none";
         });
-
-        this.reset();
-            
     }
-
-    chooseField = () => {
-        this.boxPlayerField.forEach(e=>{
-
-            e.addEventListener('click', () => {
-                this.playerSteps.push(e.textContent);
+    activateFields(field) {
+        field.forEach((e) => {
+            e.style.opacity = "1";
+            e.style.pointerEvents = "all";
+        });
+    }
+    highlightFields() {
+        let index = 0;
+        const turnOfHighlight = () => {
+            this.boxPatternFields[this.patternSteps[index] - 1].classList.remove("highlighted");
+            index++;
+            if (index === this.currentStep) {
+                this.highlighting = false;
+            }
+            if (this.highlighting === false) {
+                this.activateFields(this.boxPlayerFields);
+                this.deactivateFields(this.boxPatternFields);
+                clearInterval(highlight);
+            }
+            console.log(this);
+        };
+        const highlight = setInterval(() => {
+            this.highlighting = true;
+            if (this.highlighting === true) {
+                this.deactivateFields(this.boxPlayerFields);
+                this.activateFields(this.boxPatternFields);
+            }
+            this.boxPatternFields[this.patternSteps[index] - 1].classList.add("highlighted");
+            setTimeout(turnOfHighlight, 500);
+        }, 600);
+    }
+    start() {
+        this.deactivateFields(this.boxPlayerFields);
+        this.deactivateFields(this.boxPatternFields);
+        let choosedSteps = this.selectSteps.selectedIndex + 1;
+        let randomField = this.boxPatternFields[this.randomNumbers()];
+        let index = 1;
+        this.selectSteps.addEventListener("change", (e) => {
+            console.log(e.target.value);
+            choosedSteps = e.target.value;
+        });
+        this.buttonStart.addEventListener("click", () => {
+            for (let i = 0; i < choosedSteps; i++) {
+                this.patternSteps.push(parseInt(randomField.textContent));
+                randomField = this.boxPatternFields[this.randomNumbers()];
+            }
+            console.log("Cała kombinacja", this.patternSteps);
+            console.log("Wybrana liczba kroków: ", choosedSteps);
+            for (let step of this.patternSteps) {
+                this.currentPattern.push(step);
+                if (this.currentStep === index) {
+                    break;
+                }
+            }
+            console.log("Aktualny wzór", this.currentPattern);
+            this.highlightFields();
+            this.chooseField();
+            this.buttonStart.setAttribute("disabled", "");
+            this.selectSteps.setAttribute("disabled", "");
+        });
+        this.reset();
+    }
+    chooseField() {
+        this.boxPlayerFields.forEach((e) => {
+            e.addEventListener("click", () => {
+                this.playerSteps.push(parseInt(e.textContent));
                 this.clicks++;
-                console.log(this.patternSteps);
-                console.log(this.playerSteps);
-                console.log(`Select steps: ${this.selectSteps}`);
+                console.clear();
+                console.log("Cały wzór", this.patternSteps);
+                console.log("Aktualny wzór", this.currentPattern);
+                console.log("Wybory uzytkownika", this.playerSteps);
                 console.log("Clicks: " + this.clicks);
-                console.log("Selected index:" + (this.selectSteps.selectedIndex + 1))
-                if(this.clicks === (this.selectSteps.selectedIndex + 1)) {
+                console.log("Poziom trudności:", this.selectSteps.selectedIndex + 1);
+                if (this.clicks === this.currentStep) {
                     this.highlighting = true;
                     if (this.highlighting === true) {
-                        this.boxPlayerField.forEach(e=>{
-                            e.style.opacity = '.4';
-                            e.style.pointerEvents = 'none';
-                        });
-                    } 
+                        this.deactivateFields(this.boxPlayerFields);
+                        this.activateFields(this.boxPatternFields);
+                    }
                     this.clicks = 0;
                     this.checkScore();
                 }
-                
-              
-            })
-        })
+            });
+        });
     }
-
-    checkScore = () => {
+    checkScore() {
+        if (JSON.stringify(this.currentPattern) === JSON.stringify(this.playerSteps)) {
+            this.currentStep++;
+            this.highlightFields();
+            const createCurrentPattern = () => {
+                this.currentPattern = [];
+                let index = 0;
+                for (let step of this.patternSteps) {
+                    this.currentPattern.push(step);
+                    index++;
+                    if (this.currentStep === index) {
+                        break;
+                    }
+                }
+            };
+            createCurrentPattern();
+            this.clicks = 0;
+        }
         if (JSON.stringify(this.patternSteps) === JSON.stringify(this.playerSteps)) {
             console.log(JSON.stringify(this.patternSteps));
-            this.popup.classList.add('visible');
-        } else {
+            this.popup.classList.add("visible");
+        }
+        else {
             this.playerSteps = [];
-            this.highlight();
+            this.highlightFields();
         }
     }
-
-    reset = () =>{
-        this.buttonReset.addEventListener('click', ()=>{
-            this.buttonStart.removeAttribute('disabled');
+    reset() {
+        this.buttonReset.addEventListener("click", () => {
+            this.buttonStart.removeAttribute("disabled");
+            this.selectSteps.removeAttribute("disabled");
             this.clicks = 0;
             this.patternSteps = [];
             this.playerSteps = [];
-            console.log("Clicks: " + this.clicks);
+            this.currentStep = 1;
+            this.currentPattern = [];
         });
-        this.buttonPlayAgain.addEventListener('click', ()=>{
-            // this.buttonStart.removeAttribute('disabled');
-            // this.patternSteps = [];
-            // this.playerSteps = [];
-            this.popup.classList.remove('visible');
-        })
-
+        this.buttonPlayAgain.addEventListener("click", () => {
+            this.popup.classList.remove("visible");
+        });
     }
-    
-
 }
-
-
-const game = new Game({
-    buttonStart : document.querySelector('.button--start'),
-    buttonReset : document.querySelector('.button--reset'),
-    buttonPlayAgain : document.querySelector('.button--play-again'),
-    boxPatternField : document.querySelectorAll('.box--pattern .box__field'),
-    selectSteps : document.querySelector('#stepsNumber'),
-    boxPlayerField : document.querySelectorAll('.box--player .box__field'),
-    popup : document.querySelector('.popup')
-});
-
+const game = new Game(document.querySelector(".button--start"), document.querySelector(".button--reset"), document.querySelector(".button--play-again"), patternFields, document.querySelector("#stepsNumber"), document.querySelectorAll(".box--player .box__field"), document.querySelector(".popup"));
 game.start();
-
-
-
