@@ -1,11 +1,9 @@
-import { patternFields } from "./components/Fields.js";
-
 class Game {
 	private buttonStart: HTMLButtonElement;
 	private buttonReset: HTMLButtonElement;
 	private buttonPlayAgain: HTMLButtonElement;
 	private boxPatternFields: NodeListOf<HTMLDivElement>;
-	private selectSteps: HTMLSelectElement;
+	private selectSteps: any;
 	private boxPlayerFields: NodeListOf<HTMLDivElement>;
 	private popup: HTMLDivElement;
 
@@ -94,10 +92,15 @@ class Game {
 		let choosedSteps = this.selectSteps.selectedIndex + 1;
 		let randomField = this.boxPatternFields[this.randomNumbers()];
 		let index = 1;
+		const inputSelectHeader: any = document.querySelector(".select__header");
 
 		this.selectSteps.addEventListener("change", (e: any) => {
-			console.log(e.target.value);
 			choosedSteps = e.target.value;
+			inputSelectHeader.textContent = choosedSteps;
+		});
+
+		window.addEventListener("DOMContentLoaded", () => {
+			inputSelectHeader.textContent = choosedSteps;
 		});
 
 		this.buttonStart.addEventListener("click", () => {
@@ -121,6 +124,7 @@ class Game {
 			this.chooseField();
 			this.buttonStart.setAttribute("disabled", "");
 			this.selectSteps.setAttribute("disabled", "");
+			this.selectSteps.parentNode.setAttribute("disabled", "");
 		});
 
 		this.reset();
@@ -155,28 +159,30 @@ class Game {
 			JSON.stringify(this.currentPattern) === JSON.stringify(this.playerSteps)
 		) {
 			this.currentStep++;
-			this.highlightFields();
+			if (this.currentStep <= this.patternSteps.length) {
+				this.highlightFields();
 
-			const createCurrentPattern = () => {
-				this.currentPattern = [];
-				let index = 0;
+				const createCurrentPattern = () => {
+					this.currentPattern = [];
+					let index = 0;
 
-				for (let step of this.patternSteps) {
-					this.currentPattern.push(step);
-					index++;
-					if (this.currentStep === index) {
-						break;
+					for (let step of this.patternSteps) {
+						this.currentPattern.push(step);
+						index++;
+						if (this.currentStep === index) {
+							break;
+						}
 					}
-				}
-			};
+				};
 
-			createCurrentPattern();
+				createCurrentPattern();
+			}
+
 			this.clicks = 0;
 		}
 		if (
 			JSON.stringify(this.patternSteps) === JSON.stringify(this.playerSteps)
 		) {
-			console.log(JSON.stringify(this.patternSteps));
 			this.popup.classList.add("visible");
 		} else {
 			this.playerSteps = [];
@@ -188,11 +194,14 @@ class Game {
 		this.buttonReset.addEventListener("click", () => {
 			this.buttonStart.removeAttribute("disabled");
 			this.selectSteps.removeAttribute("disabled");
+			this.selectSteps.parentNode.removeAttribute("disabled", "");
 			this.clicks = 0;
 			this.patternSteps = [];
 			this.playerSteps = [];
 			this.currentStep = 1;
 			this.currentPattern = [];
+			this.highlighting = false;
+			console.log(this);
 		});
 		this.buttonPlayAgain.addEventListener("click", () => {
 			this.popup.classList.remove("visible");
@@ -204,7 +213,7 @@ const game: Game = new Game(
 	document.querySelector(".button--start"),
 	document.querySelector(".button--reset"),
 	document.querySelector(".button--play-again"),
-	patternFields,
+	document.querySelectorAll(".box--pattern .box__field"),
 	document.querySelector("#stepsNumber"),
 	document.querySelectorAll(".box--player .box__field"),
 	document.querySelector(".popup")

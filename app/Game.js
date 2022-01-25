@@ -1,4 +1,4 @@
-import { patternFields } from "./components/Fields.js";
+"use strict";
 class Game {
     constructor(buttonStart, buttonReset, buttonPlayAgain, boxPatternFields, selectSteps, boxPlayerFields, popup) {
         this.patternSteps = [];
@@ -61,9 +61,13 @@ class Game {
         let choosedSteps = this.selectSteps.selectedIndex + 1;
         let randomField = this.boxPatternFields[this.randomNumbers()];
         let index = 1;
+        const inputSelectHeader = document.querySelector(".select__header");
         this.selectSteps.addEventListener("change", (e) => {
-            console.log(e.target.value);
             choosedSteps = e.target.value;
+            inputSelectHeader.textContent = choosedSteps;
+        });
+        window.addEventListener("DOMContentLoaded", () => {
+            inputSelectHeader.textContent = choosedSteps;
         });
         this.buttonStart.addEventListener("click", () => {
             for (let i = 0; i < choosedSteps; i++) {
@@ -83,6 +87,7 @@ class Game {
             this.chooseField();
             this.buttonStart.setAttribute("disabled", "");
             this.selectSteps.setAttribute("disabled", "");
+            this.selectSteps.parentNode.setAttribute("disabled", "");
         });
         this.reset();
     }
@@ -112,23 +117,24 @@ class Game {
     checkScore() {
         if (JSON.stringify(this.currentPattern) === JSON.stringify(this.playerSteps)) {
             this.currentStep++;
-            this.highlightFields();
-            const createCurrentPattern = () => {
-                this.currentPattern = [];
-                let index = 0;
-                for (let step of this.patternSteps) {
-                    this.currentPattern.push(step);
-                    index++;
-                    if (this.currentStep === index) {
-                        break;
+            if (this.currentStep <= this.patternSteps.length) {
+                this.highlightFields();
+                const createCurrentPattern = () => {
+                    this.currentPattern = [];
+                    let index = 0;
+                    for (let step of this.patternSteps) {
+                        this.currentPattern.push(step);
+                        index++;
+                        if (this.currentStep === index) {
+                            break;
+                        }
                     }
-                }
-            };
-            createCurrentPattern();
+                };
+                createCurrentPattern();
+            }
             this.clicks = 0;
         }
         if (JSON.stringify(this.patternSteps) === JSON.stringify(this.playerSteps)) {
-            console.log(JSON.stringify(this.patternSteps));
             this.popup.classList.add("visible");
         }
         else {
@@ -140,16 +146,19 @@ class Game {
         this.buttonReset.addEventListener("click", () => {
             this.buttonStart.removeAttribute("disabled");
             this.selectSteps.removeAttribute("disabled");
+            this.selectSteps.parentNode.removeAttribute("disabled", "");
             this.clicks = 0;
             this.patternSteps = [];
             this.playerSteps = [];
             this.currentStep = 1;
             this.currentPattern = [];
+            this.highlighting = false;
+            console.log(this);
         });
         this.buttonPlayAgain.addEventListener("click", () => {
             this.popup.classList.remove("visible");
         });
     }
 }
-const game = new Game(document.querySelector(".button--start"), document.querySelector(".button--reset"), document.querySelector(".button--play-again"), patternFields, document.querySelector("#stepsNumber"), document.querySelectorAll(".box--player .box__field"), document.querySelector(".popup"));
+const game = new Game(document.querySelector(".button--start"), document.querySelector(".button--reset"), document.querySelector(".button--play-again"), document.querySelectorAll(".box--pattern .box__field"), document.querySelector("#stepsNumber"), document.querySelectorAll(".box--player .box__field"), document.querySelector(".popup"));
 game.start();

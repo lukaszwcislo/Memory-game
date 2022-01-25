@@ -19,6 +19,8 @@ h1 {
 	left: 0;
 	margin: auto;
 	color: #333131;
+	-webkit-text-stroke: 2px #706f6f;
+	animation: rainbow 60s linear infinite;
 }
 #memory-game {
 	position: relative;
@@ -58,7 +60,7 @@ h1 {
 	margin: 10px;
 	transition: opacity 0.2s, background 0.2s, box-shadow 0.2s, color 0.2s,
 		color 0.2s, transform 0.2s, border 0.2s;
-	background: #33313174;
+	background: #1e1d1d;
 	border-radius: 5px;
 	border: 1px solid #d7d7d7;
 }
@@ -88,26 +90,55 @@ select {
 	text-align: center;
 	appearance: none;
 	margin: 0;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	margin: 0;
+	background: rebeccapurple;
+	opacity: 0;
 }
 select[disabled] {
 	pointer-events: none;
-	opacity: 0.2;
 }
 .select {
+	z-index: 1;
 	position: relative;
 	display: flex;
 	justify-content: center;
+	overflow: hidden;
+	padding-right: 70px !important;
+}
+.select[disabled] {
+	pointer-events: none;
+	opacity: 0.2;
+}
+.select:hover,
+select:hover {
+	cursor: pointer;
+}
+.select:hover:after {
+	background: #f3580c;
 }
 .select::after {
-	content: "\2304";
+	content: "\25bc";
 	position: absolute;
-	top: -4px;
-	right: 42px;
+	top: 0px;
+	right: 0px;
 	transition: all 0.25s ease 0s;
 	pointer-events: none;
 	color: white;
 	background: transparent;
-	font-size: 40px;
+	font-size: 12px;
+	background: #6d6c6c;
+	z-index: -1;
+	height: 100%;
+	width: 30px;
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 .button:hover {
 	cursor: pointer;
@@ -130,8 +161,7 @@ select[disabled] {
 }
 .button:active {
 	transform: scale(0.98);
-	box-shadow: inset 9.91px 9.91px 15px #d9dade,
-		inset -9.91px -9.91px 15px #ffffff;
+	box-shadow: inset 0px 0px 0 3px #e6550f;
 }
 .button--start {
 	animation: highlight 2s infinite;
@@ -162,17 +192,18 @@ select[disabled] {
 .popup__inner {
 	min-width: 500px;
 	min-height: 380px;
-	background: #333131;
+	background: #1e1d1d;
 	padding: 20px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	border-radius: 5px;
-	box-shadow: 0px 0px 0 #262626, 0px 0px 0px #666666;
+	box-shadow: 0px 0px 0px #666666;
 	opacity: 0;
 	transform: translateY(30px);
 	transition: opacity 0.5s 0s, transform 0.5s 0s, box-shadow 0.5s 0s;
+	border: 1px solid #666666;
 }
 .popup.visible {
 	z-index: 2;
@@ -183,7 +214,7 @@ select[disabled] {
 	opacity: 1;
 	transform: translateY(0);
 	transition: opacity 0.5s 0.5s, transform 0.5s 0.5s, box-shadow 0.5s 0.7s;
-	box-shadow: 11px 11px 0 #262626, -11px -11px 0px #666666;
+	box-shadow: -11px -11px 0px #666666;
 }
 .popup__inner h2 {
 	color: #d7d7d7;
@@ -215,17 +246,8 @@ select[disabled] {
 		align-items: center;
 	}
 
-	select {
-		width: 81%;
-	}
-
-	.select {
-		width: 100%;
-	}
-
 	.select:after {
 		top: -11px;
-		right: 91px;
 	}
 }
 
@@ -233,5 +255,36 @@ select[disabled] {
 	50% {
 		border-color: #f3580c;
 		background: #f3580c;
+	}
+}
+
+@keyframes rainbow {
+	10% {
+		-webkit-text-stroke: 2px #706f6f;
+	}
+	20% {
+		-webkit-text-stroke: 2px #a41505;
+	}
+	30% {
+		-webkit-text-stroke: 2px #f3bd0c;
+	}
+	40% {
+		-webkit-text-stroke: 2px #ffffff;
+	}
+	50% {
+		-webkit-text-stroke: 2px #0c61f3;
+	}
+	60% {
+		-webkit-text-stroke: 2px #1f0cf3;
+	}
+	70% {
+		-webkit-text-stroke: 2px #ae0cf3;
+	}
+	80% {
+		-webkit-text-stroke: 2px #f30c97;
+	}
+
+	90% {
+		-webkit-text-stroke: 2px #f3580c;
 	}
 }
